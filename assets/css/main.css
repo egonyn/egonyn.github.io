@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f5f5f5;
+  color: #222;
+}
+
+/* HEADER */
+.site-header {
+  text-align: center;
+  padding-top: 15px;
+}
+
+/* LOGO / TITRE */
+.logo {
+  margin-bottom: 10px;
+}
+
+.logo-link {
+  font-size: 18px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #222;
+}
+
+.logo-link:hover {
+  text-decoration: underline;
+}
+
+
+/* NAVBAR */
+.main-nav {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 15px 0;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #222;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.main-nav a:hover {
+  text-decoration: underline;
+}
