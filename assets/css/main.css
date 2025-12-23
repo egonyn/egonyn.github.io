@@ -134,11 +134,11 @@ body {
 .photo-item img {
   width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: 5px;
   object-fit: cover;
   transition: transform 0.3s;
 }
 
 .photo-item img:hover {
-  transform: scale(1.05);
+  transform: scale(1.01);
 }
