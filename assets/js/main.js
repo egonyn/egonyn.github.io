@@ -30,3 +30,28 @@ document.querySelectorAll('.flower-link').forEach(link => {
     }
   });
 });
+
+const filterButtons = document.querySelectorAll('.filter-btn');
+const photos = document.querySelectorAll('.photo-item');
+
+filterButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const category = btn.dataset.category;
+
+    photos.forEach(photo => {
+      if (category === 'all' || photo.dataset.category === category) {
+        photo.style.opacity = 0;
+        photo.style.display = 'block';
+        setTimeout(() => {
+          photo.style.opacity = 1;
+        }, 10); // petit délai pour la transition
+      } else {
+        photo.style.opacity = 0;
+        setTimeout(() => {
+          photo.style.display = 'none';
+        }, 500); // correspond à la durée de transition
+      }
+    });
+  });
+});
+
