@@ -53,33 +53,31 @@ body {
 }
 
 
-/* Le lien devient la référence */
 .flower-link {
   position: relative;
   display: inline-block;
 }
 
-/* La fleur */
+/* L’élément animé */
 .flower {
   position: absolute;
+  width: 12px;
+  height: 12px;
   pointer-events: none;
-  width: 14px;
-  height: 14px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   animation: flower-float 1s ease-out forwards;
-  z-index: 1;
+  z-index: 10;
 }
 
-/* Le SVG est contraint */
+/* Le SVG ne doit JAMAIS décider de sa taille */
 .flower svg {
   width: 100%;
   height: 100%;
   display: block;
 }
 
-/* Animation */
 @keyframes flower-float {
   from {
     opacity: 1;
@@ -88,7 +86,10 @@ body {
   to {
     opacity: 0;
     transform:
-      translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+      translate(
+        calc(-50% + var(--dx)),
+        calc(-50% + var(--dy))
+      )
       scale(var(--scale));
   }
 }

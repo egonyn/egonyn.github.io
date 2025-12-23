@@ -15,16 +15,14 @@ document.querySelectorAll('.flower-link').forEach(link => {
     );
     const svgText = await res.text();
 
-    const count = 3;
-
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < 3; i++) {
       const flower = document.createElement('span');
       flower.className = 'flower';
       flower.innerHTML = svgText;
 
       flower.style.setProperty('--dx', random(-20, 20) + 'px');
-      flower.style.setProperty('--dy', random(-30, -10) + 'px');
-      flower.style.setProperty('--scale', random(0.8, 1.3));
+      flower.style.setProperty('--dy', random(-25, -10) + 'px');
+      flower.style.setProperty('--scale', random(0.7, 1.2));
 
       link.appendChild(flower);
 
