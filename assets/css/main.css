@@ -88,6 +88,9 @@ body {
 
 /* 📱 MOBILE */
 @media (max-width: 768px) {
+  body {
+    background: red;
+  }
   .menu-toggle {
     display: block;
   }
