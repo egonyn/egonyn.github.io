@@ -7,13 +7,47 @@ body {
 
 /* HEADER */
 .site-header {
-  text-align: center;
-  padding-top: 15px;
+  /* text-align: center;
+  padding-top: 15px; */
+  border-bottom: 1px solid #ddd
 }
+
+/* Top bar */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  position: relative;
+}
+
+/* Hamburger */
+.menu-toggle {
+  position: absolute;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #000;
+  margin: 4px 0;
+}
+
+
 
 /* LOGO / TITRE */
 .logo {
-  margin-bottom: 10px;
+ /* margin-bottom: 10px;*/
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-decoration: none;
+    color: #000;
 }
 
 .logo-link {
@@ -50,6 +84,25 @@ body {
 
 .main-nav a:hover {
   text-decoration: underline;
+}
+
+/* 📱 MOBILE */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .main-nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    display: none;
+  }
+
+  .main-nav.open {
+    display: flex;
+  }
 }
 
 
@@ -206,4 +259,29 @@ body {
 @keyframes fadeIn {
   from { opacity: 0 }
   to { opacity: 1 }
+}
+
+.nav{
+  position: absolute;
+  top: 50%;
+  font-size: 3rem;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  padding: 0 1rem;
+  transform: translateY(-50);
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.nav:hover {
+  opacity: 1;
+}
+
+.prev {
+  left: 20px;
+}
+
+.next {
+  right: 20px;
 }
