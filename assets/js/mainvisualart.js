@@ -12,7 +12,7 @@ toggle.addEventListener('click', () => {
 
 const filterButtons = document.querySelectorAll('.filter-btn');
 
-const allPhotos = Array.from(document.querySelectorAll('.photo-item'));
+const allVisualArt = Array.from(document.querySelectorAll('.visualart-item'));
 
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.querySelector('.lightbox-img');
@@ -21,7 +21,7 @@ const closeBtn = document.querySelector('.close');
 const prevBtn = document.querySelector('.prev');
 const nextBtn = document.querySelector('.next');
 
-let visiblePhotos = [];
+let visibleVisualArt = [];
 let currentIndex = 0;
 
 const svgs = [
@@ -61,29 +61,29 @@ filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     const category = btn.dataset.category;
 
-    allPhotos.forEach(photo => {
-      if (category === 'all' || photo.dataset.category === category) {
-        photo.style.display = 'block';
+    allVisualArt.forEach(visualart => {
+      if (category === 'all' || visualart.dataset.category === category) {
+        visualart.style.display = 'block';
       } else {
-        photo.style.display = 'none';
+        visualart.style.display = 'none';
       }
     });
 
-    updateVisiblePhotos();
+    updateVisibleVisualArt();
   });
 });
 
 /* --------- UTIL --------- */
-function updateVisiblePhotos() {
-  visiblePhotos = allPhotos.filter(photo => photo.style.display !== 'none');
+function updateVisibleVisualArt() {
+  visibleVisualArt = allVisualArt.filter(visualart => visualart.style.display !== 'none');
 }
 
 /* --------- LIGHTBOX --------- */
 
 function showLightbox(index) {
-  const photo = visiblePhotos[index];
-  const img = photo.querySelector('img');
-  const title = photo.querySelector('.photo-title').textContent;
+  const visualart = visibleVisualArt[index];
+  const img = visualart.querySelector('img');
+  const title = visualart.querySelector('.visualart-title').textContent;
 
   lightboxImg.src = img.src;
   lightboxTitle.textContent = title;
@@ -93,10 +93,10 @@ function showLightbox(index) {
 }
 
 /* --------- OUVERTURE --------- */
-allPhotos.forEach(photo => {
-  photo.querySelector('img').addEventListener('click', () => {
-    updateVisiblePhotos();
-    currentIndex = visiblePhotos.indexOf(photo);
+allVisualArt.forEach(visualart => {
+  visualart.querySelector('img').addEventListener('click', () => {
+    updateVisibleVisualArt();
+    currentIndex = visibleVisualArt.indexOf(visualart);
     showLightbox(currentIndex);
   });
 });
@@ -104,13 +104,13 @@ allPhotos.forEach(photo => {
 /* --------- NAVIGATION --------- */
 prevBtn.addEventListener('click', e => {
   e.stopPropagation();
-  currentIndex = (currentIndex - 1 + visiblePhotos.length) % visiblePhotos.length;
+  currentIndex = (currentIndex - 1 + visibleVisualArt.length) % visibleVisualArt.length;
   showLightbox(currentIndex);
 });
 
 nextBtn.addEventListener('click', e => {
   e.stopPropagation();
-  currentIndex = (currentIndex + 1) % visiblePhotos.length;
+  currentIndex = (currentIndex + 1) % visibleVisualArt.length;
   showLightbox(currentIndex);
 });
 
