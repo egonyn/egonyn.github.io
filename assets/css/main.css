@@ -470,3 +470,75 @@ body {
   }
 }
 
+/* FILM PAGE */
+
+/* PAGE FILM */
+.film-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+/* TITRE */
+.film-title img {
+  max-width: 400px;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+/* RÔLES */
+.film-roles {
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  margin-bottom: 1.5rem;
+}
+
+/* RÉSUMÉ */
+.film-summary {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+
+/* INFOS */
+.film-infos {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+  margin-bottom: 3rem;
+}
+
+/* VIDÉO */
+/* .film-video {
+  margin-bottom: 3rem;
+}
+
+.film-video iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+} */
+
+/* STILLS */
+.film-stills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.film-stills img {
+  width: 100%;
+  display: block;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .film-stills {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
