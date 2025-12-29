@@ -1,6 +1,7 @@
 # egonyn.github.io
 
 #to do
+Choisir anglais ou fr bro
 
 Photography
  -> photos trop lourdes lol
@@ -18,5 +19,4 @@ Audiovisual
 -> dernierevolonte.html
 
 Visual Art
--> fix les titres
 -> ajouter des trucs (dessine le titre)
