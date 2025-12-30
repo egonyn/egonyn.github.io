@@ -12,11 +12,8 @@ Audiovisual
 -> JSP PK MAIS JAI TT FAIT EN FR FRR
 -> clean les path
 -> clean les miniatures + refaire celle de video com
--> marat.html
--> souslemasque.html
-    -> rendre les stills cliquable et possible de regarder en galerie
-    -> ouvrable sur telephone
 -> avoscameras.html
+    -> ajouter un titre en image
 -> dernierevolonte.html
 
 Visual Art
