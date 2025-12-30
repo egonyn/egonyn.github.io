@@ -14,8 +14,11 @@ Audiovisual
 -> clean les miniatures + refaire celle de video com
 -> marat.html
 -> souslemasque.html
+    -> rendre les stills cliquable et possible de regarder en galerie
+    -> ouvrable sur telephone
 -> avoscameras.html
 -> dernierevolonte.html
 
 Visual Art
 -> ajouter des trucs (dessine le titre)
+-> starhelt a décidé de ne plus apparaitre visiblement

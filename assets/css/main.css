@@ -512,15 +512,19 @@ body {
 }
 
 /* VIDÉO */
-/* .film-video {
-  margin-bottom: 3rem;
+
+.film-video {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 3rem;
 }
 
 .film-video iframe {
   width: 100%;
+  height: auto;
   aspect-ratio: 16 / 9;
-  border: none;
-} */
+  display: block;
+}
 
 /* STILLS */
 .film-stills {
@@ -540,5 +544,7 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+
 
 
