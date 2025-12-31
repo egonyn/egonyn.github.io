@@ -551,4 +551,203 @@ body {
 
 
 
+/* =========================
+   ASSOCIATION – GLOBAL
+========================= */
+
+.association {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+  color: #111;
+  font-family: 'Inter', sans-serif;
+}
+
+.association h2 {
+  font-size: 2.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.association h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.association p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+/* =========================
+   INTRO
+========================= */
+
+.association-intro {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  margin-bottom: 6rem;
+}
+
+.association-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* =========================
+   PROJECTS
+========================= */
+
+.association-project {
+  margin-bottom: 5rem;
+}
+
+.association-project:last-child {
+  margin-bottom: 0;
+}
+
+/* =========================
+   SPLIT LAYOUT
+========================= */
+
+.project-content.split {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.project-content.split.reverse {
+  grid-template-columns: 1fr 1.2fr;
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.project-image img,
+.association-image img {
+  max-height: 280px;
+  object-fit: cover;
+}
+
+/* =========================
+   GALLERY
+========================= */
+
+.project-gallery {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.project-gallery img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-gallery img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .association {
+    padding: 4rem 1.5rem;
+  }
+
+  .association-intro,
+  .project-content.split,
+  .project-content.split.reverse {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .project-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+
+  .association h2 {
+    font-size: 2rem;
+  }
+
+  .association h3 {
+    font-size: 1.4rem;
+  }
+
+  .association p {
+    font-size: 0.95rem;
+  }
+
+  .project-gallery {
+    grid-template-columns: 1fr;
+  }
+
+   .gallery-unifive {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .gallery-unifive img {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.btn-unifive {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.8rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #111;
+  border: 1.5px solid #111;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-unifive:hover {
+  background-color: #111;
+  color: #fff;
+}
+
+.gallery-unifive {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.gallery-unifive img {
+  width: 45%;
+  max-width: 420px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+
+
+
 
