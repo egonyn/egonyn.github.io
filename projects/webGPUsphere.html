@@ -1,0 +1,484 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CSC-52084-EP - Assignment 1 - WebGPU</title>
+  </head>
+  <body>
+    <canvas width="1024" height="768"></canvas>
+    <script type="module">
+
+      // Minimal 4x4 Matrix implementaton, to be used for the Model-View-Projection matrix
+
+      function mat4Identity() {
+        return new Float32Array([
+          1, 0, 0, 0,
+          0, 1, 0, 0,
+          0, 0, 1, 0,
+          0, 0, 0, 1,
+        ]);
+      }
+      
+      function mat4Translate(x, y, z) {
+        const m = mat4Identity();
+        m[12] = x;
+        m[13] = y;
+        m[14] = z;
+        return m;
+      }
+      
+      function mat4Multiply(a, b) {
+        const out = new Float32Array(16);
+        for (let col = 0; col < 4; col++) {
+          for (let row = 0; row < 4; row++) {
+            out[col * 4 + row] =
+              a[0 * 4 + row] * b[col * 4 + 0] +
+              a[1 * 4 + row] * b[col * 4 + 1] +
+              a[2 * 4 + row] * b[col * 4 + 2] +
+              a[3 * 4 + row] * b[col * 4 + 3];
+          }
+        }
+        return out;
+      }
+
+      function mat4Perspective(fovy, aspect, near, far) {
+        const f = 1.0 / Math.tan(fovy * 0.5);
+        const nf = 1.0 / (near - far);
+      
+        return new Float32Array([
+          f / aspect, 0, 0, 0,
+          0, f, 0, 0,
+          0, 0, far * nf, -1,
+          0, 0, (near * far) * nf, 0,
+        ]);
+      }
+
+      // Necessary handles for the application context
+      var canvas;
+      var adapter;
+      var device;
+      var context;
+      var canvasFormat;
+      var shaderModule;
+      var pipeline;
+
+      // Mesh handles
+      var vertexPositionBuffer;
+      var vertexPositionBufferLayout;
+      //var vertexColorBuffer;
+      //var vertexColorBufferLayout;
+      var vertexNormalBuffer;
+      var vertexNormalBufferLayout;
+      var indexData;
+      var indexBuffer;
+
+      // Z-Buffer
+      var depthTexture;
+
+      // Camera
+      var mvpMatrix;
+      var mvpBuffer;
+      var bindGroupLayout;
+      var bindGroup;
+
+      function initCamera () {
+        const model = mat4Translate(0.0, 0.0, 0.0);
+        const view  = mat4Translate(0.0, 0.0, -4.0); // move camera back
+        const aspect = canvas.width / canvas.height;
+        const fov = Math.PI / 4;
+        const near = 0.1;
+        const far = 100;
+        const proj  = mat4Perspective(
+          fov,
+          aspect,
+          near,
+          far
+        );
+        // MVP = Projection * View * Model
+        const mv  = mat4Multiply(view, model);
+        mvpMatrix = mat4Multiply(proj, mv);
+      }
+
+      async function initGPUApp() {
+        if (!navigator.gpu) {
+          throw new Error("WebGPU not supported on this browser.");
+        }
+        canvas = document.querySelector("canvas");
+        adapter = await navigator.gpu.requestAdapter();
+        if (!adapter) {
+          throw new Error("No appropriate GPUAdapter found.");
+        }
+        device = await adapter.requestDevice();
+        context = canvas.getContext("webgpu");
+        canvasFormat = navigator.gpu.getPreferredCanvasFormat();
+        context.configure({
+          device: device,
+          format: canvasFormat,
+          alphaMode: "opaque",
+        });
+      }
+
+      function generateSphere(center, radius, resolution){
+        const positions = [];
+        //const colors = [];
+        const indices = [];
+        const normals = [];
+
+        const [cx, cy, cz] = center;
+
+        const latBands = resolution;
+        const lonBands = resolution;
+
+        for (let lat = 0; lat <= latBands; lat++){
+          const theta = lat * Math.PI / latBands;
+          const sinTheta = Math.sin(theta);
+          const cosTheta = Math.cos(theta);
+
+          for(let lon = 0; lon <= lonBands; lon++){
+              const phi = lon * 2 * Math.PI/lonBands;
+              const sinPhi = Math.sin(phi);
+              const cosPhi = Math.cos(phi);
+
+              const x = cosPhi * sinTheta;
+              const y = cosTheta;
+              const z = sinPhi * sinTheta;
+
+              // Position
+              positions.push(
+                cx + radius * x,
+                cy + radius * y,
+                cz + radius * z
+              );
+
+              normals.push(x,y,z)
+
+              // colors.push(
+              //   (x/radius + 1) * 0.5,
+              //   (y/radius + 1) * 0.5,
+              //   (z/radius + 1) * 0.5
+              // );
+            }
+          }
+
+        for (let lat = 0; lat < latBands; lat++){
+          for(let lon = 0; lon < lonBands; lon++){
+            const first = lat * (lonBands + 1) + lon;
+            const second = first + lonBands + 1;
+
+            indices.push(
+              first, second, first + 1,
+              second, second + 1, first + 1
+            );
+          }
+        }
+
+        return {
+          positions: new Float32Array(positions),
+          //colors: new Float32Array(colors),
+          indices: new Uint32Array(indices),
+          normals: new Float32Array(normals),
+        }; 
+      };
+
+      // Create and fill the GPU buffers used to store the geometry to render
+      function initGPUBuffers() {
+  
+        // Vertices positions buffer
+
+        const sphere = generateSphere([0,0,0], 0.8, 32);
+        
+        // const vertexPositions = new Float32Array([
+        //   //X,    Y,   Z
+        //     -0.5, -0.5,  0.5,
+        //      0.5, -0.5,  0.5,
+        //      0.5,  0.5,  0.5,
+        //     -0.5,  0.5,  0.5,
+
+        //     -0.5, -0.5, -0.5,
+        //      0.5, -0.5, -0.5,
+        //      0.5,  0.5, -0.5,
+        //     -0.5,  0.5, -0.5,
+        // ]);
+  
+        // vertexPositionBuffer = device.createBuffer({
+        //   label: "Vertices positions",
+        //   size: vertexPositions.byteLength,
+        //   usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
+        // });
+
+        vertexPositionBuffer = device.createBuffer({
+          label: "Sphere positions",
+          size: sphere.positions.byteLength,
+          usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
+        });
+
+        device.queue.writeBuffer(vertexPositionBuffer, 0, sphere.positions);
+  
+        vertexPositionBufferLayout = {
+          arrayStride: 12,
+          attributes: [{
+            format: "float32x3",
+            offset: 0,
+            shaderLocation: 0, // Position, see vertex shader
+          }],
+        };
+  
+        //device.queue.writeBuffer(vertexPositionBuffer, 0, vertexPositions);
+
+        // Vertices Color Buffer
+
+        // const vertexColors = new Float32Array([
+        //   1.0, 0.0, 0.0,
+        //   0.0, 1.0, 0.0,
+        //   0.0, 0.0, 1.0,
+        //   1.0, 1.0, 0.0,
+
+        //   1.0, 0.0, 1.0,
+        //   0.0, 1.0, 1.0,
+        //   1.0, 1.0, 1.0,
+        //   0.0, 0.0, 0.0,
+        // ]);
+
+        // vertexColorBuffer = device.createBuffer({
+        //   label: "Vertices colors",
+        //   size: vertexColors.byteLength,
+        //   usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
+        // });
+
+        // vertexColorBufferLayout = {
+        //   arrayStride: 12,
+        //   attributes: [{
+        //     format: "float32x3",
+        //     offset: 0,
+        //     shaderLocation: 1,
+        //   }],
+        // };
+
+        // device.queue.writeBuffer(vertexColorBuffer, 0, vertexColors);
+  
+        // vertexColorBuffer = device.createBuffer({
+        //   label: "Sphere colors",
+        //   size: sphere.colors.byteLength,
+        //   usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
+        // });
+
+        // device.queue.writeBuffer(vertexColorBuffer, 0, sphere.colors);
+        
+        vertexNormalBuffer = device.createBuffer({
+          label: "Sphere normals",
+          size: sphere.normals.byteLength,
+          usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
+        });
+
+        device.queue.writeBuffer(vertexNormalBuffer, 0, sphere.normals);
+
+        vertexNormalBufferLayout = {
+          arrayStride: 12,
+          attributes: [{
+            format: "float32x3",
+            offset: 0,
+            shaderLocation: 1, 
+          }],
+        };
+
+        
+        // Index buffer
+  
+        // indexData = new Uint32Array ([
+        //   0, 1, 2, 0, 2, 3,
+        //   // Right
+        //   1, 5, 6,  1, 6, 2,
+        //   // Back
+        //   5, 4, 7,  5, 7, 6,
+        //   // Left
+        //   4, 0, 3,  4, 3, 7,
+        //   // Top
+        //   3, 2, 6,  3, 6, 7,
+        //   // Bottom
+        //   4, 5, 1,  4, 1, 0,]);
+  
+        // indexBuffer = device.createBuffer({
+        //   label: "Index data",
+        //   size: indexData.byteLength,
+        //   usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST
+        // });
+  
+        // device.queue.writeBuffer(indexBuffer, 0, indexData);
+
+        indexData = sphere.indices;
+
+        indexBuffer = device.createBuffer({
+          label: "Sphere indices",
+          size: indexData.byteLength,
+          usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST,
+        });
+
+        device.queue.writeBuffer(indexBuffer, 0, indexData);
+
+        // Uniform buffer storing the model-view-projection (MVP) matrix
+        mvpBuffer = device.createBuffer({
+          size: 64, // 16 floats made of 4 bytes each
+          usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+        });
+        
+        device.queue.writeBuffer(mvpBuffer, 0, mvpMatrix);
+        bindGroupLayout = device.createBindGroupLayout({
+          entries: [{
+            binding: 0,
+            visibility: GPUShaderStage.VERTEX,
+            buffer: { type: "uniform" },
+          }],
+        });
+
+        bindGroup = device.createBindGroup({
+          layout: bindGroupLayout,
+          entries: [{
+            binding: 0,
+            resource: { buffer: mvpBuffer },
+          }],
+        });
+      }
+
+      function initRenderPipeline() {
+        shaderModule = device.createShaderModule({
+          label: "GPU Shaders",
+          code: `
+            struct Uniforms {
+              mvp : mat4x4<f32>,
+            };
+            
+            @group(0) @binding(0)
+            var<uniform> uniforms : Uniforms;
+            
+            struct VertexInput {
+              @location(0) pos: vec3f,
+              // @location(1) color: vec3f,
+              @location(1) normal: vec3f,
+              //@builtin(instance_index) instance: u32
+            };
+  
+            struct VertexOutput {
+              @builtin(position) pos : vec4f,
+              @location(0) fragPos: vec3f,
+              @location(1) normal: vec3f,
+            };
+  
+            @vertex
+              fn vertexMain(input: VertexInput) -> VertexOutput {
+                var output: VertexOutput;
+
+                let worldPos = input.pos;
+
+                output.pos = uniforms.mvp * vec4f (worldPos, 1);
+                //output.color = input.normal * 0.5 + vec3f(0.5);
+                output.fragPos = worldPos;
+                output.normal = input.normal;
+
+                return output;
+              }
+  
+  
+            @fragment
+              fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
+                
+                let lp = vec3f(2.0, 2.0, 2.0);
+                let li = vec3f(1.0, 1.0, 1.0);
+
+                let N = normalize(input.normal);
+                let L = normalize(lp - input.fragPos);
+
+                let lambert = max(dot(N,L), 0.0);
+
+                let baseColor = N * 0.5 + vec3(0.5);
+                let color = baseColor * lambert * li;
+              
+                return vec4f(color, 1.0);
+              }
+         `
+        });
+  
+        pipeline = device.createRenderPipeline({
+          label: "Pipeline",
+          //layout: "auto",
+          layout: device.createPipelineLayout({
+            bindGroupLayouts: [bindGroupLayout],
+          }),
+          vertex: {
+            module: shaderModule,
+            entryPoint: "vertexMain",
+            buffers: [vertexPositionBufferLayout, vertexNormalBufferLayout]
+          },
+          fragment: {
+            module: shaderModule,
+            entryPoint: "fragmentMain",
+            targets: [{
+              format: canvasFormat
+            }]
+          },
+          primitive: {
+            topology: "triangle-list",
+          },
+          depthStencil: {
+            format: "depth24plus",   // Must match our depth texture
+            depthWriteEnabled: true,
+            depthCompare: "less",    // Standard depth (Z) test
+          },
+        });
+
+        // Texture used for the Z-Buffer depth test
+        depthTexture = device.createTexture({
+          size: [canvas.width, canvas.height],
+          format: "depth24plus",
+          usage: GPUTextureUsage.RENDER_ATTACHMENT,
+        });
+      }
+
+      // The main rendering loop
+      function render() {
+        const encoder = device.createCommandEncoder();
+        const renderPass = encoder.beginRenderPass({
+          label: "Main rendering pass",
+          // The color framebuffer (final imaged displayed on screen)
+          colorAttachments: [{
+            view: context.getCurrentTexture().createView(),
+            loadOp: "clear",
+            clearValue: { r: 0, g: 0, b: 0, a: 1 },
+            storeOp: "store",
+          }],
+          // The depth (Z) buffer solving for visibility
+          depthStencilAttachment: {
+            view: depthTexture.createView(),
+            depthClearValue: 1.0,
+            depthLoadOp: "clear",
+            depthStoreOp: "store",
+          },
+          sampleCount: 1,
+        });
+        renderPass.setPipeline(pipeline);
+        renderPass.setBindGroup(0, bindGroup);
+        // Binding the mesh GPU buffers
+        renderPass.setVertexBuffer(0, vertexPositionBuffer);
+        //renderPass.setVertexBuffer(1, vertexColorBuffer);
+        renderPass.setVertexBuffer(1, vertexNormalBuffer);
+        renderPass.setIndexBuffer(indexBuffer, "uint32");
+        // Actual rasterization
+        renderPass.drawIndexed(indexData.length, 1); // 3 indices, 1 instance
+        renderPass.end();
+        const commandBuffer = encoder.finish();
+        device.queue.submit([commandBuffer]);
+      }
+
+      async function main() {
+        await initGPUApp();
+        initCamera();
+        initGPUBuffers();
+        initRenderPipeline();
+        render();
+      }
+
+      main();
+
+    </script>
+  </body>
+</html>

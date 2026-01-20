@@ -30,7 +30,175 @@
   </nav>
 </header>
 
-<p>la c le body de graphics en bien</p>
+<main class="film-page graphics-page">
+
+  <!-- TITRE -->
+  <div class="graphics-title">
+    <h1>Graphics</h1>
+  </div>
+
+  <!-- INTRO -->
+  <p class="graphics-intro">
+    I have developed a strong interest in computer graphics since
+     starting my master’s degree in this field this year.
+      Although much of this domain is still new to me,
+   I am highly motivated by the learning process and deeply curious about
+    the mathematical, technical, and creative aspects of graphics. Through academic coursework and personal projects,
+     I have explored a wide range of techniques related to computer animation, real-time rendering, and visual computing.
+  </p>
+
+  <!-- SECTION -->
+  <section class="graphics-section">
+    <h2>Computer Animation - École Polytechnique</h2>
+    <p>
+      During my Computer Animation course at École Polytechnique, I completed
+      approximately nine mini-projects covering a wide range of animation and
+      graphics concepts.
+    </p>
+    <ul>
+      <li>Kinematic and procedural animation</li>
+      <li>Character rigging and hierarchical modeling</li>
+      <li>Particle systems</li>
+      <li>Deformable bodies</li>
+      <li>Rigid bodies and collision handling</li>
+      <li>Fluid simulation</li>
+    </ul>
+    <div class="graphics-gallery">
+
+      <div class="photo-item" data-category="graphics">
+        <video
+          src="assets/videos/graphics/CA_lab3.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+        ></video>
+        <span class="photo-title">Inverse Kinematics</span>
+      </div>
+
+      <div class="photo-item" data-category="graphics">
+        <video
+          src="assets/videos/graphics/CA_lab7.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+        ></video>
+        <span class="photo-title">Clothes</span>
+      </div>
+
+      <div class="photo-item" data-category="graphics">
+        <video
+          src="assets/videos/graphics/CA_lab8.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+        ></video>
+        <span class="photo-title">SPH</span>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="graphics-section">
+    <h2>Fundamentals of Computer Graphics</h2>
+    <p>
+      As part of the Fundamentals of Computer Graphics course, I implemented
+      several core rendering techniques from scratch.
+    </p>
+    <ul>
+      <li><strong>Shadow Mapping</strong> — depth-based shadow rendering</li>
+      <li><strong>Loop Subdivision</strong> — mesh refinement and surface smoothing</li>
+    </ul>
+  </section>
+
+  <section class="graphics-section">
+    <h2>3D Modeling & Animation</h2>
+    <p>
+      I worked on several 3D modeling and animation projects combining
+      mathematical modeling and real-time rendering.
+    </p>
+    <ul>
+      <li>3D Solar System simulation with hierarchical transformations</li>
+      <li>Robot modeling and articulated animation using <strong>Three.js</strong></li>
+    </ul>
+
+    <div class="graphics-gallery">
+      <!-- <div class="photo-item">
+        <img src="assets/images/graphics/man.png" alt="Threejs Robot">
+        <span class="photo-title">Threejs Robot</span>
+      </div> -->
+
+      <div class="photo-item">
+        <img src="assets/images/graphics/walkingman.png" alt="Threejs Robot">
+        <span class="photo-title">Threejs Robot</span>
+      </div>
+      <div class="photo-item">
+        <img src="assets/images/graphics/three.png" alt="Threejs tree">
+        <span class="photo-title">Threejs Tree</span>
+      </div>
+      <div class="photo-item">
+      <video src="assets/videos/graphics/solarsystem.mp4" autoplay loop muted playsinline></video>
+      <span class="photo-title">Solar System - OpenGL</span>
+    </div>
+
+  </div>
+  </section>
+
+  <section class="graphics-section">
+  <h2>Real-Time Graphics — Unity</h2>
+  <p>
+    I explored real-time interactive graphics using Unity through both
+    classic gameplay prototypes and immersive virtual reality experiments.
+  </p>
+  <ul>
+    <li>Roll-a-Ball prototype (physics, player control, game logic)</li>
+    <li>Integration of Unity with a Meta Quest VR headset (currently learning)</li>
+  </ul>
+
+  <div class="graphics-gallery">
+    <div class="photo-item">
+      <video src="assets/videos/graphics/rollaball.mp4" autoplay loop muted playsinline></video>
+      <span class="photo-title">Roll-a-Ball — Unity</span>
+    </div>
+
+    <!-- <div class="photo-item">
+      <video src="assets/videos/graphics/quest_vr.mp4" autoplay loop muted playsinline></video>
+      <span class="photo-title">Unity × Meta Quest — VR Prototype</span>
+    </div> -->
+  </div>
+</section>
+
+
+  <section class="graphics-section highlight">
+    <h2>WebGPU (In Progress)</h2>
+    <p>
+      I am currently working on a WebGPU projects to better understand modern
+      GPU APIs and real-time rendering on the web.
+    </p>
+
+    <a href="./projects/webGPUsphere.html" class="btn-unifive">View Demo</a>
+  </section>
+
+  <section class="graphics-section highlight">
+  <h2>Computer Vision Research - OpenCV (In Progress)</h2>
+  <p>
+    In parallel with my graphics work, I am involved in a research-oriented
+    project focused on computer vision using OpenCV.
+  </p>
+
+  <!-- <div class="graphics-gallery">
+    <div class="photo-item">
+      <img src="assets/images/graphics/opencv_research.png" alt="OpenCV research preview">
+      <span class="photo-title">OpenCV — Research Project</span>
+    </div>
+  </div> -->
+</section>
+
+
+</main>
+
 
 <script src="assets/js/main.js"></script>
 </body>

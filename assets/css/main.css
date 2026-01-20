@@ -749,5 +749,94 @@ body {
 
 
 
+/* =========================
+   GRAPHICS PAGE
+========================= */
 
+.graphics-page {
+  max-width: 900px;
+}
 
+.graphics-title h1 {
+  font-size: 2.6rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 2rem;
+}
+
+.graphics-intro {
+  font-size: 1rem;
+  line-height: 1.7;
+  opacity: 0.85;
+  margin-bottom: 4rem;
+}
+
+.graphics-section {
+  margin-bottom: 3.5rem;
+  text-align: left;
+}
+
+.graphics-section h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.graphics-section p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 0.8rem;
+  color: #333;
+}
+
+.graphics-section ul {
+  padding-left: 1.2rem;
+}
+
+.graphics-section li {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 0.4rem;
+}
+
+.graphics-section.highlight {
+  border-left: 3px solid #111;
+  padding-left: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .graphics-title h1 {
+    font-size: 2.2rem;
+  }
+
+  .graphics-intro {
+    font-size: 0.95rem;
+  }
+}
+
+.graphics-gallery video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.graphics-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .graphics-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .graphics-gallery {
+    grid-template-columns: 1fr;
+  }
+}
