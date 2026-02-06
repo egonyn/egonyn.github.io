@@ -83,10 +83,22 @@ function updateVisibleVisualArt() {
 function showLightbox(index) {
   const visualart = visibleVisualArt[index];
   const img = visualart.querySelector('img');
-  const title = visualart.querySelector('.visualart-title').textContent;
+  // const title = visualart.querySelector('.visualart-title').textContent;
+ const title = visualart.querySelector('.visualart-title').textContent;
+  const link = visualart.dataset.link;
 
+  if (link) {
+    lightboxTitle.innerHTML = `
+      ${title}<br>
+      <center><a href="${link}" target="_blank" class="lightbox-link">
+        More information
+      </a></center>
+    `;
+  } else {
+    lightboxTitle.textContent = title;
+  }
   lightboxImg.src = img.src;
-  lightboxTitle.textContent = title;
+  // lightboxTitle.textContent = title;
   lightbox.style.display = 'flex';
 
   currentIndex = index;

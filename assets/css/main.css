@@ -1007,3 +1007,15 @@ body {
     max-width: 100%;
   }
 }
+
+.lightbox-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: white;
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+
+.lightbox-link:hover {
+  opacity: 0.7;
+}
