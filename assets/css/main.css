@@ -86,7 +86,7 @@ body {
   text-decoration: underline;
 }
 
-/* 📱 MOBILE */
+/* MOBILE */
 @media (max-width: 768px) {
   body {
     background: white !important;
